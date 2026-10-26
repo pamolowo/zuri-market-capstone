@@ -9,6 +9,9 @@ ENV VITE_API_URL=$VITE_API_URL VITE_STORE_NAME=$VITE_STORE_NAME
 RUN npm run build
 
 FROM nginxinc/nginx-unprivileged:stable-alpine
+USER root
+RUN apk upgrade --no-cache brotli-libs curl libcurl
+USER 101
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 8080
