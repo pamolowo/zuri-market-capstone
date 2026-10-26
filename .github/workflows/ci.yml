@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   quality:
-    name: ${{ matrix.app }} - lint, test, quality gate
+    name: ${{ matrix.app }} - lint, test, audit
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -24,8 +24,6 @@ jobs:
         working-directory: ${{ matrix.app }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -37,17 +35,25 @@ jobs:
       - run: npm run build --if-present
       - name: Dependency audit (fails on high or critical)
         run: npm audit --omit=dev --audit-level=high
+
+  sonar:
+    name: SonarQube Cloud quality gate
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: SonarQube Cloud scan and quality gate
         uses: SonarSource/sonarqube-scan-action@d209202bc7d53ff1cc128f7f907dac145c9d6ae9 # v8.3.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          projectBaseDir: ${{ matrix.app }}
           args: -Dsonar.qualitygate.wait=true
 
   image-scan:
     name: ${{ matrix.app }} - build and Trivy scan
-    needs: quality
+    needs: sonar
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
