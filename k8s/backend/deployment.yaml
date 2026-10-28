@@ -17,7 +17,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: backend
-          image: ghcr.io/pamolowo/zuri-market-capstone-backend:<TAG>
+          image: ghcr.io/pamolowo/zuri-market-capstone-backend:sha-eaa23dd
           ports:
             - name: http
               containerPort: 5000
