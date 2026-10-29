@@ -1,7 +1,5 @@
 # Zuri Market DevOps Capstone
 
-# Zuri Market DevOps Capstone
-
 A small e-commerce store (React frontend, Node/Express backend) delivered through a reviewed, tested, scanned and monitored pipeline: **GitHub Actions → GHCR → Kubernetes (k3s) on AWS**, provisioned with **Terraform** and observed with **Prometheus and Grafana**. Secrets live in **AWS Secrets Manager**, never in Git.
 
 ## 1. Overview: the four problems Zuri had
